@@ -1,0 +1,25 @@
+{
+  "name": "deals-api-demo",
+  "version": "1.0.0",
+  "description": "Simple project for demonstrate \"Deals\" API  implementation for NodeJS.",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "dependencies": {
+    "@unitybase/deals-api": "^1.0.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mushu-maxy/deals-api-demo.git"
+  },
+  "keywords": [
+    "deals",
+    "api"
+  ],
+  "author": "Maksym Loboda",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mushu-maxy/deals-api-demo/issues"
+  },
+  "homepage": "https://github.com/mushu-maxy/deals-api-demo#readme"
+}
