@@ -15,7 +15,7 @@ You must register on host application before run test
 
 ```
 set deals_url=https://deals.dealssign.com
-set user=user-name
+set user=user name
 set pass=your password
 set org_code=00000000
 
@@ -26,4 +26,4 @@ npm run test
 - **deals_url** - URL address of deals
 - **user** - Login of registered user
 - **pass** - Password
-- **org_code** - EDRPO of organization
+- **org_code** - Code (EDRPO) of organization
