@@ -6,7 +6,7 @@ const {DealsAPI} = require('@unitybase/deals-api')
 const fs = require('fs')
 const dealsUrl = process.env.deals_url || 'https://deals.dealssign.com'
 const user = process.env.user
-const pass = process.env.pass
+const pass = process.env.pwd
 const orgCode = process.env.org_code
 
 console.log('Deals URL:' + dealsUrl)
