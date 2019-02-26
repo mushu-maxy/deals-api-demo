@@ -8,6 +8,7 @@ const dealsUrl = process.env.deals_url || 'https://deals.dealssign.com'
 const user = process.env.user
 const pass = process.env.pwd
 const orgCode = process.env.org_code
+const orgCodeForInvite = process.env.org_for_invite
 
 console.log('Deals URL:' + dealsUrl)
 console.log('User:' + user)
@@ -20,7 +21,6 @@ let dateFom = new Date()
 dateFom.setFullYear(dateFom.getFullYear() - 1)
 let docID
 let dealID
-let orgForInvite
 
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0
 console.log('Get organization ID')
@@ -65,7 +65,7 @@ api.getOrganization({code: orgCode}).then(res => {
   })
   .then(res => {
     console.log('Invite partner to deal')
-    return api.getOrganization({code: orgForInvite})
+    return api.getOrganization({code: orgCodeForInvite})
   })
   .then(res => {
     console.log('Organization to invite ID:' + res.ID)
