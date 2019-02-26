@@ -13,12 +13,16 @@ console.log('Deals URL:' + dealsUrl)
 console.log('User:' + user)
 console.log('Password:' + pass)
 console.log('Organization code:' + orgCode)
+console.log('Organization code for invite:' + orgCodeForInvite)
 
 const api = new DealsAPI({dealsUrl: dealsUrl, login: user, password: pass})
 let dateFom = new Date()
 dateFom.setFullYear(dateFom.getFullYear() - 1)
 let docID
+let dealID
+let orgForInvite
 
+process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0
 console.log('Get organization ID')
 api.getOrganization({code: orgCode}).then(res => {
   console.log('Organization ID:' + res.ID)
@@ -34,6 +38,7 @@ api.getOrganization({code: orgCode}).then(res => {
   .then(res => {
     console.log('Deal ID: ' + res.ID)
     console.log('Add new document')
+    dealID = res.ID
     return api.addDocument({dealID: res.ID, document: {name: 'test.js', docType: 'ONE_SIDE_SIGNING', requireConfirm: false, notifyWhenComplete: true}})
   })
   .then(res => {
@@ -58,4 +63,15 @@ api.getOrganization({code: orgCode}).then(res => {
     console.log('Save response to result.zip')
     fs.writeFileSync('result.zip', Buffer.from(res), {encoding: 'binary'})
   })
-.catch(err => console.log(err))
+  .then(res => {
+    console.log('Invite partner to deal')
+    return api.getOrganization({code: orgForInvite})
+  })
+  .then(res => {
+    console.log('Organization to invite ID:' + res.ID)
+    return api.invitePartner({dealID: dealID, orgID: res.ID, invite: 'Let me invite you to organization'})
+  })
+  .then(res =>{
+  console.log('Invitation was sent')
+  })
+  .catch(err => console.log(err))
