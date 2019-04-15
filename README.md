@@ -1,8 +1,8 @@
 # deals-api-demo
 
-**Simple project for demonstrate "Deals" API  implementation for NodeJS.**
+**Demonstration of using "Deals" API from NodeJS**
 
-## Installation
+## Setup
 
 ```
 git clone https://github.com/mushu-maxy/deals-api-demo.git
@@ -11,19 +11,34 @@ npm install
 ```
 
 ##  Run test
-You must register on host application before run test
 
-```
+### Prerequirements
+The user must be registered in the Deals system.
+To register user use [Deals registration form](https://deals.dealssign.com/registerUser.html)
+
+User name and password you enter during registration 
+
+### Tests
+
+Set environment variable deals_url to the Delas site address.
+
+Set `user` `pwd` and `org_code` environment variables to values you enter during registration
+
+```cmd
 set deals_url=https://deals.dealssign.com
-set user=user name
-set pass=your password
-set org_code=00000000
+set user=yurUserName
+set pass=yourPassword
+set org_code=YourOrganizationCode
+```
 set signer=eMailSigner1@host.ua
 set signer2=eMailSigner2@host.ua
 set data_file=./testData/tst.PDF
 set signature=./testData/tst.PDF.p7s
 set signature2=./testData/tst.PDF.p7s
 
+Run a tests
+
+```
 npm run test
 ```
 
@@ -39,3 +54,4 @@ npm run test
 - **signer2** - Second signer login
 - **signature** - Path to signature 1 file
 - **signature2** - Path to signature 2 file
+- **org_code_for_invite** Code (EDRPO) of organization for invite

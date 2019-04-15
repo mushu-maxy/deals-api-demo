@@ -4,13 +4,14 @@
 console.log('Deals API test - start')
 const {DealsAPI} = require('@unitybase/deals-api')
 const fs = require('fs')
-const dealsUrl = process.env.deals_url || 'https://deals-demo.dealssign.com' ||  'https://deals-tst.deals.unitybase.info'
+const dealsUrl = process.env.deals_url || 'https://deals-demo.dealssign.com'
 const user = process.env.user || 'admin'
 const pass = process.env.pass || 'admin'
 const signer = process.env.signer
 const signer2 = process.env.signer2
 const signers = signer || signer2 ? [signer, signer2] : []
 const orgCode = process.env.org_code || '00000000'
+const orgCodeForInvite = process.env.org_code_for_invite
 const dataFile = process.env.data_file
 const signature = process.env.signature
 const signature2 = process.env.signature2
@@ -25,7 +26,8 @@ process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0
 const api = new DealsAPI({dealsUrl: dealsUrl, login: user, password: pass})
 let dateFom = new Date()
 dateFom.setFullYear(dateFom.getFullYear() - 1)
-let docID, dealID
+let docID
+let dealID
 
 console.log('Get organization ID')
 api.getOrganization({code: orgCode}).then(res => {
@@ -98,4 +100,18 @@ api.getOrganization({code: orgCode}).then(res => {
     console.log('Save response to result.zip')
     fs.writeFileSync('result.zip', Buffer.from(res), {encoding: 'binary'})
   })
-.catch(err => console.log(err))
+  .then(res => {
+    if (!orgCodeForInvite) return
+    console.log('Invite partner to deal')
+    return api.getOrganization({code: orgCodeForInvite})
+  })
+  .then(res => {
+    if (!orgCodeForInvite) return
+    console.log('Organization to invite ID:' + res.ID)
+    return api.invitePartner({dealID: dealID, orgID: res.ID, invite: 'Let me invite you to organization'})
+  })
+  .then(res => {
+    if (!orgCodeForInvite) return
+    console.log('Invitation was sent')
+  })
+  .catch(err => console.log(err))
