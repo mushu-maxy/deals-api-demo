@@ -1,12 +1,12 @@
 {
   "name": "deals-api-demo",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Simple project for demonstrate \"Deals\" API  implementation for NodeJS.",
   "scripts": {
     "test": "node test.js"
   },
   "dependencies": {
-    "@unitybase/deals-api": "^1.0.5"
+    "@unitybase/deals-api": "^1.0.6"
   },
   "repository": {
     "type": "git",
