@@ -48,7 +48,7 @@ api.getOrganization({code: orgCode}).then(res => {
     return api.addDocument({
       dealID: res.ID,
       document: {
-        name: 'test.js',
+        name: 'test.pdf',
         docType: 'ONE_SIDE_SIGNING',
         requireConfirm: false,
         notifyWhenComplete: true,
@@ -66,6 +66,7 @@ api.getOrganization({code: orgCode}).then(res => {
     return api.setDocumentContent({ ID: res[0], content: bufferData })
   })
   .then(res => {
+    return
     if (!signature) return
     console.log('Upload the 1 signature content')
     let bufferData = fs.readFileSync(signature)
@@ -74,6 +75,7 @@ api.getOrganization({code: orgCode}).then(res => {
     return api.addDocumentSignature({ ID: docID, user: signer, signature: bufferData })
   })
   .then(res => {
+    return
     if (!signature2) return
     console.log('Upload the 2 signature content')
     let bufferData = fs.readFileSync(signature2)
