@@ -52,6 +52,7 @@ api.getOrganization({code: orgCode}).then(res => {
         docType: 'ONE_SIDE_SIGNING',
         requireConfirm: false,
         notifyWhenComplete: true,
+        payForPartner: true,
         signers: signers
       }
     })
