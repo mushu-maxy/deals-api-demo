@@ -9,12 +9,25 @@ const user = process.env.user || 'admin'
 const pass = process.env.pass || 'admin'
 const signer = process.env.signer
 const signer2 = process.env.signer2
-const signers = signer || signer2 ? [signer, signer2] : []
+const signers = signer || (signer2 ? [signer, signer2] : [])
+const approver = process.env.approver
+const approver2 = process.env.approver2
+const approvers = approver || (approver2 ? [approver, approver2] : [])
 const orgCode = process.env.org_code || '00000000'
 const orgCodeForInvite = process.env.org_code_for_invite
 const dataFile = process.env.data_file
 const signature = process.env.signature
 const signature2 = process.env.signature2
+const onlyAuthor = process.env.onlyAuthor === 'true'
+const payForPartnerDeal = process.env.payForPartnerDeal === 'true'
+const payForPartnerDoc = process.env.payForPartnerDoc === 'true'
+const publicGroup = process.env.publicGroup
+const moderator = process.env.moderator
+const accessUser = process.env.accessUser
+const accessGroup = process.env.accessGroup
+const accessGroupFull = process.env.accessGroupFull
+const accessType = (accessUser || accessGroup || accessGroupFull) ? 'LIMITED': 'GENERAL'
+
 
 console.log('Deals URL:' + dealsUrl)
 console.log('User:' + user)
@@ -30,7 +43,7 @@ let docID
 let dealID
 
 console.log('Get organization ID')
-api.getOrganization({code: orgCode}).then(res => {
+api.getOrganization({code: orgCode, confirmed: true}).then(res => {
   console.log('Organization ID:' + res.ID)
   console.log('Get your deals list')
   return api.getDealsList({orgID: res.ID, dateFrom: dateFom, dateTo: new Date(), appendArchive: true})
@@ -39,7 +52,18 @@ api.getOrganization({code: orgCode}).then(res => {
     console.log('Deals list:')
     console.log(JSON.stringify(res, null, ' '))
     console.log('Add new deal')
-    return api.addNewDeal({name: 'deal for test' + (new Date()).getTime(), description: (new Date()).toLocaleString()})
+    return api.addNewDeal({
+      name: 'deal for test' + (new Date()).getTime(),
+      description: (new Date()).toLocaleString(),
+      onlyAuthor: onlyAuthor,
+      payForPartner: payForPartnerDeal,
+      publicGroup: publicGroup,
+      moderator: moderator,
+      accessUser: accessUser,
+      accessGroup: accessGroup,
+      accessGroupFull: accessGroupFull,
+      accessType: accessType
+    })
   })
   .then(res => {
     console.log('Deal ID: ' + res.ID)
@@ -52,8 +76,9 @@ api.getOrganization({code: orgCode}).then(res => {
         docType: 'ONE_SIDE_SIGNING',
         requireConfirm: false,
         notifyWhenComplete: true,
-        payForPartner: true,
-        signers: signers
+        payForPartner: payForPartnerDoc,
+        signers: signers,
+        approvers: approvers
       }
     })
   })
