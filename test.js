@@ -9,12 +9,13 @@ const user = process.env.user || 'admin'
 const pass = process.env.pass || 'admin'
 const signer = process.env.signer
 const signer2 = process.env.signer2
-const signers = signer || (signer2 ? [signer, signer2] : [])
+const signers = signer2 && signer ? [signer, signer2] : (signer ? signer: [])
 const approver = process.env.approver
 const approver2 = process.env.approver2
-const approvers = approver || (approver2 ? [approver, approver2] : [])
+const approvers = approver2 && approver ? [approver, approver2] : (approver ? approver: [])
 const orgCode = process.env.org_code || '00000000'
 const orgCodeForInvite = process.env.org_code_for_invite
+const eMailForInvite = process.env.email_for_invite
 const dataFile = process.env.data_file
 const signature = process.env.signature
 const signature2 = process.env.signature2
@@ -23,7 +24,7 @@ const payForPartnerDeal = process.env.payForPartnerDeal === 'true'
 const payForPartnerDoc = process.env.payForPartnerDoc === 'true'
 const publicGroup = process.env.publicGroup
 const moderator = process.env.moderator
-const accessUser = process.env.accessUser
+const accessUser = process.env.accessUser ? JSON.parse(process.env.accessUser) : null // ['user1','user2']
 const accessGroup = process.env.accessGroup
 const accessGroupFull = process.env.accessGroupFull
 const accessType = (accessUser || accessGroup || accessGroupFull) ? 'LIMITED': 'GENERAL'
@@ -73,7 +74,7 @@ api.getOrganization({code: orgCode, confirmed: true}).then(res => {
       dealID: res.ID,
       document: {
         name: 'test.pdf',
-        docType: 'ONE_SIDE_SIGNING',
+        docType: 'TWO_SIDE_SIGNING',
         requireConfirm: false,
         notifyWhenComplete: true,
         payForPartner: payForPartnerDoc,
@@ -139,7 +140,11 @@ api.getOrganization({code: orgCode, confirmed: true}).then(res => {
     return api.invitePartner({dealID: dealID, orgID: res.ID, invite: 'Let me invite you to organization'})
   })
   .then(res => {
-    if (!orgCodeForInvite) return
+    if (!eMailForInvite || orgCodeForInvite) return
+    return api.invitePartner({dealID: dealID, eMail: eMailForInvite, invite: 'Let me invite you to organization'})
+  })
+  .then(res => {
+    if (!orgCodeForInvite && !eMailForInvite) return
     console.log('Invitation was sent')
   })
   .catch(err => console.log(err))
