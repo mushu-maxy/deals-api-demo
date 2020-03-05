@@ -23,13 +23,15 @@ const onlyAuthor = process.env.onlyAuthor === 'true'
 const payForPartnerDeal = process.env.payForPartnerDeal === 'true'
 const payForPartnerDoc = process.env.payForPartnerDoc === 'true'
 const publicGroup = process.env.publicGroup
+const addDeleteRequest = process.env.addDeleteRequest === 'true'
 const moderator = process.env.moderator
-const accessUser = process.env.accessUser ? JSON.parse(process.env.accessUser) : null // ['user1','user2']
+const accessUser = null // process.env.accessUser ? JSON.parse(process.env.accessUser) : null // ['user1','user2']
 const accessGroup = process.env.accessGroup
 const accessGroupFull = process.env.accessGroupFull
 const accessType = (accessUser || accessGroup || accessGroupFull) ? 'LIMITED': 'GENERAL'
 
 
+console.log('signature', signature)
 console.log('Deals URL:' + dealsUrl)
 console.log('User:' + user)
 console.log('Password:' + pass)
@@ -50,11 +52,11 @@ api.getOrganization({code: orgCode, confirmed: true}).then(res => {
   return api.getDealsList({orgID: res.ID, dateFrom: dateFom, dateTo: new Date(), appendArchive: true})
 })
   .then(res => {
-    console.log('Deals list:')
-    console.log(JSON.stringify(res, null, ' '))
+    // console.log('Deals list:')
+    // console.log(JSON.stringify(res, null, ' '))
     console.log('Add new deal')
     return api.addNewDeal({
-      name: 'deal for test' + (new Date()).getTime(),
+      name: '!deal for test' + (new Date()).getTime(),
       description: (new Date()).toLocaleString(),
       onlyAuthor: onlyAuthor,
       payForPartner: payForPartnerDeal,
@@ -74,7 +76,7 @@ api.getOrganization({code: orgCode, confirmed: true}).then(res => {
       dealID: res.ID,
       document: {
         name: 'test.pdf',
-        docType: 'TWO_SIDE_SIGNING',
+        docType: 'RECIPIENT_SIGNING', // 'TWO_SIDE_SIGNING',
         requireConfirm: false,
         notifyWhenComplete: true,
         payForPartner: payForPartnerDoc,
@@ -90,10 +92,11 @@ api.getOrganization({code: orgCode, confirmed: true}).then(res => {
     console.log('Upload the document content')
     let bufferData = fs.readFileSync(dataFile)
     bufferData = bufferData.buffer.slice(bufferData.byteOffset, bufferData.byteOffset + bufferData.byteLength)
+    console.log( bufferData.byteLength)
     return api.setDocumentContent({ ID: res[0], content: bufferData })
   })
   .then(res => {
-    return
+    //return
     if (!signature) return
     console.log('Upload the 1 signature content')
     let bufferData = fs.readFileSync(signature)
@@ -146,5 +149,13 @@ api.getOrganization({code: orgCode, confirmed: true}).then(res => {
   .then(res => {
     if (!orgCodeForInvite && !eMailForInvite) return
     console.log('Invitation was sent')
+  })
+  .then(res => {
+    if (!addDeleteRequest) return
+    console.log('addDeleteRequest')
+    return api.deleteDocumentRequest({ documentID: docID})
+    .then(function (res) {
+      console.log(res)
+    })
   })
   .catch(err => console.log(err))
