@@ -7,7 +7,7 @@
     "test2": "node test2.js"
   },
   "dependencies": {
-    "@unitybase/deals-api": "^1.0.10"
+    "@unitybase/deals-api": "^1.0.11"
   },
   "repository": {
     "type": "git",
